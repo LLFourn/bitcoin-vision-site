@@ -24,31 +24,7 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #0A0A09;
-    --panel: #121211;
-    --soft: #191917;
-    --line: #262624;
-    --line2: #3A3935;
-    --ink: #F2F2EE;
-    --muted: #ABAAA3;
-    --dim: #85847D;
-    --ok: #5BC891;
-    --warn: #E5A84B;
-    --onInk: #0A0A09;
-    --hdr: rgba(10, 10, 9, 0.86);
-    --code: #050505;
-    --codeInk: #E8E8E3;
-    --codeLine: #262624;
-    --hand: #A9B8DA;
-    --shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-    --segShadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    --warnTint: color-mix(in srgb, var(--warn) 10%, transparent);
-    color-scheme: dark;
-  }
-}
-
+/* Light by default; dark only when picked with the header toggle (saved per browser). */
 :root[data-theme='dark'] {
   --bg: #0A0A09;
   --panel: #121211;

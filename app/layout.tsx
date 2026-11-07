@@ -13,14 +13,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FAFAF9' },
-    { media: '(prefers-color-scheme: dark)', color: '#0A0A09' },
-  ],
+  themeColor: '#FAFAF9',
 };
 
-// Apply a theme the visitor picked before first paint, so there is no flash.
-// Without one, CSS follows the system setting.
+// Light by default. Apply dark before first paint if the visitor picked it,
+// so there is no flash.
 const themeScript = `try{var t=localStorage.getItem('bv-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

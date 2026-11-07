@@ -45,7 +45,7 @@ the labels are right. The photo is redrawn without EXIF and sent with its labels
 appears when `NEXT_PUBLIC_SAMPLE_UPLOAD_URL` is set (the `SAMPLE_UPLOAD_URL` repo variable in CI).
 
 The page design is the “Model site” board (light and dark). Colours are tokens at the top of
-`app/globals.css`; dark follows the system setting, and the header toggle overrides it (saved per browser).
+`app/globals.css`; light is the default; the header toggle switches to dark (saved per browser).
 
 To move to a newer upstream commit, change `UPSTREAM_REV` in `scripts/build-vision.sh`, re-run it, and bump
 `CACHE` in `public/vision/worker.js` so returning visitors fetch the new model.
