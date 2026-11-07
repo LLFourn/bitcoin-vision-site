@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bitcoin-vision · Photo in. Seed words out.</title>
+<meta name="description" content="bitcoin-vision is a tiny offline AI that reads handwritten seed backups, plain recovery words or Penlock shares, right on your device.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Geist:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Main">
+    <a href="#top" class="brand">
+      <span class="brand-mark"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--onA)" stroke-width="2.4"><path d="M3 8V4h4M17 4h4v4M21 16v4h-4M7 20H3v-4"/><circle cx="12" cy="12" r="3"/></svg></span>
+      bitcoin-vision
+    </a>
+    <a href="#try" class="nav-link">Demo</a>
+    <a href="#penlock" class="nav-link">Penlock</a>
+    <a href="#hardware" class="nav-link">Hardware</a>
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#try" class="nav-cta">Try it</a>
+  </nav>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section id="top" class="hero">
+    <div class="hero-copy">
+      <h1><span style="color: var(--a1)">Photo in.</span><br>Seed words <span style="color: var(--a2)">out.</span></h1>
+      <p class="hero-sub">bitcoin-vision is a tiny AI that reads handwritten seed backups, plain recovery words or Penlock shares, right on your device. No internet, and no silent guessing: it shows how sure it is and asks when it isn’t.</p>
+      <div class="hero-ctas">
+        <a href="#try" class="btn btn--primary">Try the demo</a>
+        <a href="#penlock" class="btn btn--ghost">Made for Penlock</a>
+      </div>
+      <ul class="chips hero-pills">
+        <li class="chip"><span style="color: var(--a2)">●</span> Works offline</li>
+        <li class="chip"><span style="color: var(--a3)">●</span> Reads Penlock shares</li>
+        <li class="chip"><span style="color: var(--a1)">●</span> Runs on Passport Prime</li>
+      </ul>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="hero-page paper" id="hero-page"></div>
+      <div class="bubble bubble--found"><span style="color: var(--a2)">12</span> words found</div>
+      <div class="bubble bubble--fix">absert? → <span style="color: var(--a3)">absent</span></div>
+    </div>
+  </section>
+
+  <!-- Live demo -->
+  <section id="try" class="section demo" aria-labelledby="try-h">
+    <div class="demo-grid">
+      <div class="demo-side">
+        <p class="eyebrow" style="color: var(--a1)">Live demo</p>
+        <h2 id="try-h" class="h2">Try it.</h2>
+        <p class="muted" style="margin: 0 0 20px">Tap the shutter or press Play. Watch it find, read and check every word, and ask you when it’s unsure.</p>
+        <div class="seg" role="group" aria-label="Backup type">
+          <button type="button" data-act="mode" data-v="bip" id="seg-bip">Recovery words</button>
+          <button type="button" data-act="mode" data-v="pen" id="seg-pen">Penlock share</button>
+        </div>
+        <ol class="rail" id="demo-rail"></ol>
+        <button type="button" class="play-btn" data-act="play"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="var(--onA)"><path d="M6 4l14 8-14 8z"/></svg><span id="play-label">Play the demo</span></button>
+        <p class="fine">Uses a practice page. Never photograph a real backup.</p>
+      </div>
+
+      <div class="phone-col">
+        <div class="phone-stage">
+          <div class="device">
+            <span class="device-btn" aria-hidden="true" style="left: -3px; top: 118px; height: 30px"></span>
+            <span class="device-btn" aria-hidden="true" style="left: -3px; top: 172px; height: 58px"></span>
+            <span class="device-btn" aria-hidden="true" style="left: -3px; top: 240px; height: 58px"></span>
+            <span class="device-btn" aria-hidden="true" style="right: -3px; top: 200px; height: 92px"></span>
+            <div class="bezel">
+              <div class="screen">
+                <span class="island" aria-hidden="true"></span>
+                <div id="demo-screen"></div>
+                <span class="homebar" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="thinking-col">
+        <div class="thinking">
+          <div class="thinking-head">
+            <span class="dot" aria-hidden="true"></span>
+            <b>What the AI is thinking</b>
+            <small>● offline</small>
+          </div>
+          <div class="thoughts" id="demo-thoughts" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Penlock -->
+  <section id="penlock" class="section" aria-labelledby="pen-h">
+    <div class="split">
+      <div>
+        <p class="eyebrow" style="color: var(--a3)">Made for Penlock</p>
+        <h2 id="pen-h" class="h2">Split on paper. Read back in one photo.</h2>
+        <p class="lead">Penlock is a printable paper tool that splits your 12-word seed phrase into 3 shares. Keep them in different places. Any 2 bring your wallet back; 1 alone reveals nothing useful.</p>
+        <p class="lead" style="margin-bottom: 0">Typing a share back in is slow and easy to get wrong. bitcoin-vision reads the whole share from a photo, every symbol, the share’s identity code and each row’s error check.</p>
+        <div class="stats3">
+          <div class="stat-sm"><b style="color: var(--a3)">2 of 3</b><span>shares restore it</span></div>
+          <div class="stat-sm"><b style="color: var(--a2)">72</b><span>symbols read per share</span></div>
+          <div class="stat-sm"><b style="color: var(--a1)">1</b><span>slip fixed per word</span></div>
+        </div>
+        <a href="https://github.com/penlock-io" class="text-link">Learn about Penlock ↗</a>
+      </div>
+      <div class="shares-art" aria-hidden="true">
+        <div class="shares">
+          <div class="share paper"><p class="share-label">SHARE 1 · DIGITAL</p><div id="pen-a"></div></div>
+          <div class="share share--missing"><p class="share-label">SHARE 2 · SOCIAL</p><div id="pen-b"></div></div>
+          <div class="share paper"><p class="share-label">SHARE 3 · LEGAL</p><div id="pen-c"></div></div>
+        </div>
+        <div class="pill-strong">Shares 1 + 3 <span style="color: var(--a2)">→</span> your 12 words</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hardware -->
+  <section id="hardware" class="section" aria-labelledby="hw-h">
+    <div class="card-xl">
+      <div class="hw-art" aria-hidden="true">
+        <div class="hw-device">
+          <span class="hw-side"></span>
+          <div class="hw-screen">
+            <p class="share-label">PENLOCK · SHARE 1</p>
+            <div class="hw-read">KQ7 RMX</div>
+            <p>✓ 12 of 12 rows read</p>
+            <p style="color: #9A9AA3">offline · on device</p>
+          </div>
+          <div class="hw-keys"><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="hw-copy">
+        <p class="eyebrow" style="color: var(--a1)">Built for hardware wallets</p>
+        <h2 id="hw-h" class="h2">Small enough to live inside your wallet.</h2>
+        <p class="lead" style="margin-bottom: 20px">The whole AI is about 25 MB and never needs the internet, so it can run inside a signing device. It already powers the Penlock app on <strong style="color: var(--ink)">Passport Prime</strong>, reading shares right on the hardware wallet.</p>
+        <ul class="chips" style="margin-bottom: 22px">
+          <li class="chip">Runs offline</li>
+          <li class="chip">Rust library</li>
+          <li class="chip">Android example app</li>
+          <li class="chip">MIT / Apache-2.0</li>
+        </ul>
+        <a href="https://github.com/penlock-io/bitcoin-vision" class="btn btn--ink">Add it to your device ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Share handwriting -->
+  <section id="share" class="section" aria-labelledby="share-h">
+    <div class="card-xl card-xl--soft">
+      <div class="share-copy">
+        <p class="eyebrow" style="color: var(--a1)">Help it learn</p>
+        <h2 id="share-h" class="h2">Send us your handwriting.</h2>
+        <p class="lead" style="margin-bottom: 22px">Everyone writes differently. Photos of practice words, never a real backup, teach the model to read more hands.</p>
+        <ol class="chips">
+          <li class="chip chip--panel"><span style="color: var(--a1); font-weight: 700">1</span> Write 12 practice words</li>
+          <li class="chip chip--panel"><span style="color: var(--a2); font-weight: 700">2</span> Snap a photo</li>
+          <li class="chip chip--panel"><span style="color: var(--a3); font-weight: 700">3</span> Send it</li>
+        </ol>
+      </div>
+      <div class="share-box">
+        <div id="share-card"></div>
+        <p class="share-note">Sent only when you press Send. Prototype: nothing is sent yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it thinks -->
+  <section id="how" class="section" aria-labelledby="how-h">
+    <h2 id="how-h" class="h2" style="margin-top: 0; margin-bottom: 12px">How it thinks.</h2>
+    <p class="lead" style="margin-bottom: 32px; max-width: 620px">It doesn’t understand your wallet. It does one narrow job, turning handwriting into the right words, in four small steps.</p>
+    <div class="cards4">
+      <article class="how-card">
+        <div class="how-art how-art--boxes paper" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <h3><span style="color: var(--a1)">1</span> Find</h3>
+        <p>Straightens the photo and boxes every word on the page.</p>
+      </article>
+      <article class="how-card">
+        <div class="how-art how-art--read paper" aria-hidden="true">
+          <span class="hand" style="font-size: 38px; line-height: 1">absert</span>
+          <span class="letters"><span>a</span><span>b</span><span>s</span><span>e</span><span class="is-off">r</span><span>t</span></span>
+        </div>
+        <h3><span style="color: var(--a2)">2</span> Read</h3>
+        <p>Reads letter by letter. A sloppy “n” can look like an “r”.</p>
+      </article>
+      <article class="how-card">
+        <div class="how-art how-art--bars" aria-hidden="true">
+          <div><div class="bar-head"><span>absent</span><span class="muted">71%</span></div><div class="bar-track"><div style="width: 71%; background: var(--a3)"></div></div></div>
+          <div><div class="bar-head"><span>assert</span><span class="muted">22%</span></div><div class="bar-track"><div style="width: 22%; background: var(--a4)"></div></div></div>
+          <div><div class="bar-head"><span>absurd</span><span class="muted">4%</span></div><div class="bar-track"><div style="width: 4%; background: var(--a2)"></div></div></div>
+        </div>
+        <h3><span style="color: var(--a3)">3</span> Match</h3>
+        <p>Scores what it read against all 2048 official seed words.</p>
+      </article>
+      <article class="how-card">
+        <div class="how-art how-art--check" aria-hidden="true">
+          <span class="ring"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--a4)" stroke-width="2.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+        </div>
+        <h3><span style="color: var(--a4)">4</span> Check</h3>
+        <p>Tests all 12 words together with the backup’s built-in check.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Unsure -->
+  <section class="section sure" aria-labelledby="sure-h">
+    <div class="sure-copy">
+      <h2 id="sure-h" class="h2" style="margin-top: 0; margin-bottom: 14px">Unsure? <span style="color: var(--a3)">It asks.</span></h2>
+      <p class="lead" style="margin-bottom: 12px">Every word gets a confidence score. When two words look alike, or a read isn’t a real seed word, it stops and asks you.</p>
+      <p class="muted" style="margin: 0; font-size: 16px">The built-in check catches most mistakes, but about <strong style="color: var(--ink)">1 time in 16</strong> a wrong word still slips through. Always compare with your paper.</p>
+    </div>
+    <div class="sure-list">
+      <div class="sure-row"><span class="hand">abandon</span><span class="sure-track"><span style="width: 97%; background: var(--a2)"></span></span><span class="sure-label" style="color: var(--a2)">Sure</span></div>
+      <div class="sure-row" style="border: 1px dashed var(--a3)"><span class="hand">absert</span><span class="sure-track"><span style="width: 71%; background: var(--a3)"></span></span><span class="sure-label" style="color: var(--a3)">Not a word</span></div>
+      <div class="sure-row" style="border: 1px dashed var(--a1)"><span class="hand">amuse</span><span class="sure-track"><span style="width: 58%; background: var(--a1)"></span></span><span class="sure-label" style="color: var(--a1)">abuse or amuse?</span></div>
+    </div>
+  </section>
+
+  <!-- Privacy -->
+  <section id="privacy" class="section" aria-labelledby="priv-h">
+    <h2 id="priv-h" class="h2" style="margin-top: 0; margin-bottom: 12px">Stays on your device.</h2>
+    <p class="lead" style="margin-bottom: 32px; max-width: 620px">Big AI models live on servers. This one is small enough to stay with you, so your backup never leaves your hands.</p>
+    <div class="cards3">
+      <div class="stat-lg"><b style="color: var(--a1)">0</b><h3>internet connections</h3><p>Reading happens entirely offline.</p></div>
+      <div class="stat-lg"><b style="color: var(--a2)">~25<small> MB</small></b><h3>the whole AI</h3><p>About the size of a few phone photos.</p></div>
+      <div class="stat-lg"><b style="color: var(--a3)">You</b><h3>decide when it’s gone</h3><p>Tap Forget and the photo and words are wiped.</p></div>
+    </div>
+  </section>
+
+  <!-- Limits -->
+  <section class="section limits" aria-labelledby="lim-h">
+    <h2 id="lim-h" class="h2" style="margin-top: 0; margin-bottom: 12px">What it can’t do yet.</h2>
+    <p class="lead" style="margin-bottom: 24px; max-width: 620px">It’s an early, open-source prototype. Here’s where it struggles.</p>
+    <ul class="chips">
+      <li class="chip">English seed words only</li>
+      <li class="chip">Faint or messy writing can fool it</li>
+      <li class="chip">A passing check isn’t proof</li>
+      <li class="chip chip--alert">Practice words only, never a real backup</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-brand"><span aria-hidden="true"></span>bitcoin-vision</p>
+    <span>Open source · MIT or Apache-2.0</span>
+    <a href="https://github.com/penlock-io">Penlock ↗</a>
+    <a href="https://github.com/penlock-io/bitcoin-vision">Developers ↗</a>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

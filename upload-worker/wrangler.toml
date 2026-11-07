@@ -1,0 +1,20 @@
+# Receives training samples that visitors chose to share, into a private R2 bucket.
+# Setup: see README.md in this folder.
+name = "bitcoin-vision-samples"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+
+[vars]
+# Comma-separated origins allowed to upload. Add your GitHub Pages origin,
+# e.g. "https://<user>.github.io" (origin only: no path, no trailing slash).
+ALLOWED_ORIGINS = "https://vayras.github.io,http://localhost:3000"
+
+[[r2_buckets]]
+binding = "SAMPLES"
+bucket_name = "bitcoin-vision-samples"
+
+# At most 10 uploads per minute from one visitor.
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }

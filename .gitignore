@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+.env*.local
+
+# bitcoin-vision browser build (scripts/build-vision.sh makes these)
+wasm/upstream/
+wasm/target/
+public/vision/pkg/
+public/vision/models/
+
+# upload worker
+upload-worker/node_modules/
+upload-worker/.wrangler/

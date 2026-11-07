@@ -1,0 +1,26 @@
+diff --git a/words/Cargo.toml b/words/Cargo.toml
+index a69a4ea..ebe8a34 100644
+--- a/words/Cargo.toml
++++ b/words/Cargo.toml
+@@ -19,6 +19,8 @@ imageproc = { version = "0.27", default-features = false }
+ rand = { version = "0.9", default-features = false, features = ["std_rng"] }
+ serde = { version = "1", features = ["derive"] }
+ serde_json = "1"
++# std::time::Instant panics in browser WebAssembly; web-time is std on native.
++web-time = "1"
+ tract-onnx = { version = "0.23", optional = true }
+ 
+ [dev-dependencies]
+diff --git a/words/src/recogniser_shape.rs b/words/src/recogniser_shape.rs
+index 7e78abd..e305d05 100644
+--- a/words/src/recogniser_shape.rs
++++ b/words/src/recogniser_shape.rs
+@@ -42,7 +42,7 @@ pub fn build(
+     macro_rules! prepare {
+         ($name:literal, $span:literal, $work:expr) => {{
+             observe(BuildEvent::StageStart($name));
+-            let start = std::time::Instant::now();
++            let start = web_time::Instant::now();
+             let span = crate::timing::span($span);
+             let value = $work?;
+             drop(span);

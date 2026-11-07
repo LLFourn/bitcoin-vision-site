@@ -1,0 +1,67 @@
+# Builds the model to WebAssembly and the site to static files, then
+# publishes both to GitHub Pages. Settings › Pages › Source: GitHub Actions.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- the model, compiled to WebAssembly ---
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: wasm-bindgen@0.2.130 # must match wasm/Cargo.toml
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: wasm
+      - run: ./scripts/build-vision.sh
+
+      # --- the site ---
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - id: pages
+        uses: actions/configure-pages@v5
+      - run: npm run build
+        env:
+          # "/<repo>" for a project site, "" for a user site or custom domain.
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # Where opt-in training samples go (upload-worker/). Set it in
+          # Settings › Secrets and variables › Actions › Variables. Unset: no prompt.
+          NEXT_PUBLIC_SAMPLE_UPLOAD_URL: ${{ vars.SAMPLE_UPLOAD_URL }}
+          NEXT_TELEMETRY_DISABLED: 1
+      - run: touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

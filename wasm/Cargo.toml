@@ -1,0 +1,33 @@
+[package]
+name = "bitcoin-vision-wasm"
+version = "0.1.0"
+edition = "2024"
+description = "bitcoin-vision's two scanners, compiled to WebAssembly for the browser"
+license = "MIT OR Apache-2.0"
+publish = false
+
+# Its own workspace: the upstream checkout under ./upstream has one too.
+[workspace]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# ./upstream is penlock-io/bitcoin-vision at the commit pinned in
+# scripts/build-vision.sh, with ./patches applied. That script creates it.
+bitcoin-vision-words = { path = "upstream/words", default-features = false, features = ["onnx"] }
+penlock-scan = { path = "upstream/penlock-scan", default-features = false, features = ["onnx"] }
+penlock = { path = "upstream/penlock" }
+
+# Must match the wasm-bindgen CLI version exactly.
+wasm-bindgen = "=0.2.130"
+serde = { version = "1", features = ["derive"] }
+serde-wasm-bindgen = "0.6"
+serde_bytes = "0.11"
+console_error_panic_hook = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
