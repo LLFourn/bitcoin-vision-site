@@ -3,6 +3,9 @@
 name = "bitcoin-vision-samples"
 main = "src/index.ts"
 compatibility_date = "2026-11-01"
+# Served at https://bitcoin-vision-samples.<account>.workers.dev; no per-version preview URLs.
+workers_dev = true
+preview_urls = false
 
 [vars]
 # Comma-separated origins allowed to upload. Add your GitHub Pages origin,

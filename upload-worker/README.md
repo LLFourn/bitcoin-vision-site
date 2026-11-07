@@ -30,7 +30,7 @@ Edit `ALLOWED_ORIGINS` in `wrangler.toml` to your site’s origin, e.g.
 npx wrangler deploy
 ```
 
-It prints the worker URL, e.g. `https://bitcoin-vision-samples.<account>.workers.dev`.
+It prints the worker URL, e.g. `https://bitcoin-vision-samples.<account>.workers.dev` (this project: `https://bitcoin-vision-samples.tusharvyas316.workers.dev`).
 In the site’s GitHub repo, add a variable under **Settings › Secrets and variables › Actions › Variables**:
 
 ```
