@@ -436,3 +436,4 @@ div.wt-btn { cursor: default; }
 .consent-done { margin: 0; font-weight: 600; color: var(--ok); }
 .consent-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .small-btn:disabled { opacity: 0.45; cursor: default; }
+.consent-fine a { color: var(--ink); }

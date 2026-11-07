@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { GLYPHS, glyph } from '@/lib/sample-data';
 import { rowUnsure } from '@/lib/vision/client';
 import { sharingEnabled } from '@/lib/vision/share';
+import { removalRequest } from '@/lib/links';
 import type { Point, WordRead } from '@/lib/vision/types';
 import { isFlagged, latestShare, unsureCount, usePlayground, type PenPick, type PgActions, type PgState } from './usePlayground';
 
@@ -413,8 +414,9 @@ function ShareConsent({ s, a }: P) {
       <div className="consent" role="status">
         <p className="consent-done">✓ Thank you. This sample was shared for training.</p>
         <p className="consent-fine">
-          Sample ID <code>{share.id}</code>. Keep it if you ever want the sample removed. Forget clears this page; it
-          doesn’t delete a shared sample.
+          Sample ID <code>{share.id}</code>. Changed your mind?{' '}
+          <a href={removalRequest(share.id ?? '')} target="_blank" rel="noreferrer">Ask us to remove it</a>. Forget
+          clears this page; it doesn’t delete a shared sample.
         </p>
       </div>
     );
