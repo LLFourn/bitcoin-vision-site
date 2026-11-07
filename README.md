@@ -34,6 +34,7 @@ The base path (`/<repo>/`) is set automatically.
 | `wasm/src/lib.rs` | The JS-facing API: `WordScanner`, `ShareScanner`, `recoverShares`, `checksumPasses`, `listWords` |
 | `public/vision/worker.js` | Web Worker that loads the model (cached in Cache Storage after the first visit) and scans off the main thread |
 | `lib/vision/client.ts` | Promise API the React app uses: `scanWords`, `scanShares`, `recoverShares`, `checksumPasses` |
+| `content/integration-guide.md` | The integration guide, served at `/docs/` (edit the Markdown; the page rebuilds from it) |
 | `components/playground/` | The Playground: the scripted sample on Run, the real model on “Use your own practice photo” |
 
 ## Opt-in training samples

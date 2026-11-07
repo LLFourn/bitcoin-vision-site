@@ -413,3 +413,56 @@ div.wt-btn { cursor: default; }
 .consent-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .small-btn:disabled { opacity: 0.45; cursor: default; }
 .consent-fine a { color: var(--ink); }
+
+/* ---------------------------------------------------------------- docs */
+.docs { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; padding: 64px 56px 88px; border-bottom: 1px solid var(--line); }
+.docs-toc nav { position: sticky; top: 84px; }
+.docs-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.docs-toc a { display: block; padding: 6px 10px; margin-left: -10px; border-radius: 6px; color: var(--muted); text-decoration: none; }
+.docs-toc a:hover { color: var(--ink); background: var(--soft); }
+.docs-body { min-width: 0; max-width: 760px; }
+.docs-title { font-size: clamp(38px, 4.6vw, 56px); margin-bottom: 18px; }
+.docs-body > .lead { margin: 0; }
+.docs-updated { margin: 16px 0 48px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+
+.prose { color: var(--muted); }
+.prose h2 { margin: 56px 0 14px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--ink); font-size: 28px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; scroll-margin-top: 80px; }
+.prose > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.prose p { margin: 0 0 16px; }
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose ul, .prose ol { margin: 0 0 18px; padding-left: 22px; }
+.prose li { margin: 6px 0; }
+.prose li::marker { color: var(--dim); }
+.prose ul:has(> li > input[type='checkbox']) { list-style: none; padding-left: 0; }
+.prose li > input[type='checkbox'] { width: 16px; height: 16px; margin: 0 10px 0 0; vertical-align: -3px; accent-color: var(--ink); }
+.prose a { color: var(--ink); text-underline-offset: 3px; }
+.prose code { font-family: var(--mono); font-size: 0.86em; padding: 1px 6px; border-radius: 5px; background: var(--soft); border: 1px solid var(--line); color: var(--ink); overflow-wrap: anywhere; }
+.prose pre { margin: 0 0 20px; padding: 16px 18px; border-radius: 10px; background: var(--code); border: 1px solid var(--codeLine); color: var(--codeInk); overflow: auto; font-family: var(--mono); font-size: 13px; line-height: 1.7; }
+.prose pre code { padding: 0; border: 0; background: none; color: inherit; font-size: inherit; overflow-wrap: normal; }
+.table-wrap { margin: 0 0 20px; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.prose table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 15px; }
+.prose th { padding: 10px 14px; text-align: left; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dim); background: var(--soft); border-bottom: 1px solid var(--line); }
+.prose td { padding: 12px 14px; vertical-align: top; color: var(--ink); border-bottom: 1px solid var(--line); }
+.prose tr:last-child td { border-bottom: 0; }
+
+.pipes-fig { margin: 8px 0 24px; display: flex; flex-direction: column; gap: 12px; }
+.lane { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.lane-tag { margin: 0 0 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dim); }
+.lane ol { list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; }
+.lane li { position: relative; flex: 1 1 0; min-width: 0; padding: 10px 12px; border-radius: 8px; background: var(--soft); border: 1px solid var(--line); }
+.lane li + li::before { content: '→'; position: absolute; left: -15px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 13px; }
+.lane li b { display: block; font-size: 14px; font-weight: 600; color: var(--ink); }
+.lane li span { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; color: var(--dim); overflow-wrap: anywhere; }
+.lane li.is-you { background: var(--ink); border-color: var(--ink); }
+.lane li.is-you b, .lane li.is-you span { color: var(--onInk); }
+
+@media (max-width: 1100px) {
+  .docs { grid-template-columns: 1fr; padding: 56px 40px 72px; gap: 0; }
+  .docs-toc { display: none; }
+  .lane ol { flex-direction: column; gap: 16px; }
+  .lane li + li::before { content: '↓'; left: 50%; top: -15px; transform: translateX(-50%); }
+}
+@media (max-width: 640px) {
+  .docs { padding: 40px 20px 56px; }
+  .prose h2 { font-size: 24px; }
+}

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { INTEGRATION_GUIDE } from '@/lib/links';
 
@@ -94,7 +95,7 @@ export default function Integrate() {
           {TARGETS.map(([t, d]) => (
             <li key={t}><p style={{ fontWeight: 500 }}>{t}</p><p>{d}</p></li>
           ))}
-          <li className="is-cta"><a href={INTEGRATION_GUIDE} className="btn btn--ink">Read the integration guide ↗</a></li>
+          <li className="is-cta"><Link href={INTEGRATION_GUIDE} className="btn btn--ink">Read the integration guide →</Link></li>
         </ul>
       </div>
     </section>

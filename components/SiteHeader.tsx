@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { GITHUB } from '@/lib/links';
 
@@ -37,7 +38,7 @@ function ThemeToggle() {
   );
 }
 
-const LINKS = [['#demo', 'Demo'], ['#model', 'Model'], ['#integrate', 'Integrate'], ['#hardware', 'Hardware']];
+const LINKS = [['/#demo', 'Demo'], ['/#model', 'Model'], ['/#integrate', 'Integrate'], ['/docs/', 'Docs']];
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -46,20 +47,20 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <nav className="nav" aria-label="Main">
-        <a href="#top" className="brand">
+        <Link href="/" className="brand">
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5" />
             <path d="M8 9h8M8 12h6M8 15h7" />
           </svg>
           bitcoin-vision
           <span className="brand-tag">v0</span>
-        </a>
-        {LINKS.map(([href, label]) => <a key={href} href={href} className="nav-link nav-links">{label}</a>)}
+        </Link>
+        {LINKS.map(([href, label]) => <Link key={href} href={href} className="nav-link nav-links">{label}</Link>)}
         <a href={GITHUB} className="btn-sm btn-sm--line nav-links">GitHub ↗</a>
-        <a href="#demo" className="btn-sm btn-sm--ink">
+        <Link href="/#demo" className="btn-sm btn-sm--ink">
           <span className="try-long">Try the demo</span>
           <span className="try-short">Try it</span>
-        </a>
+        </Link>
         <ThemeToggle />
         <button type="button" className="icon-btn menu-btn" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label="Menu">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -68,7 +69,7 @@ export default function SiteHeader() {
         </button>
       </nav>
       <div id="mobile-menu" className={`mobile-menu${open ? ' is-open' : ''}`}>
-        {LINKS.map(([href, label]) => <a key={href} href={href} onClick={close}>{label}</a>)}
+        {LINKS.map(([href, label]) => <Link key={href} href={href} onClick={close}>{label}</Link>)}
         <a href={GITHUB}>GitHub ↗</a>
       </div>
     </header>

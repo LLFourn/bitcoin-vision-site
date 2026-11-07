@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { GITHUB, INTEGRATION_GUIDE, PENLOCK } from '@/lib/links';
 
 const SPECS: [string, string][] = [
@@ -25,7 +26,7 @@ export function Hero() {
         </p>
         <div className="hero-ctas">
           <a href="#demo" className="btn btn--ink">Try the demo</a>
-          <a href={INTEGRATION_GUIDE} className="btn btn--line">Integration guide ↗</a>
+          <Link href={INTEGRATION_GUIDE} className="btn btn--line">Integration guide →</Link>
         </div>
       </div>
       <dl className="specs card">
@@ -194,7 +195,7 @@ export function SiteFooter() {
       <span>MIT or Apache-2.0</span>
       <a href={GITHUB}>GitHub ↗</a>
       <a href={PENLOCK}>Penlock ↗</a>
-      <a href={INTEGRATION_GUIDE}>Integration guide ↗</a>
+      <Link href={INTEGRATION_GUIDE}>Integration guide</Link>
     </footer>
   );
 }
