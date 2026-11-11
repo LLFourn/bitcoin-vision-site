@@ -15,12 +15,14 @@ export interface Candidate {
 export interface WordRead {
   /** Exactly what was read off the paper, e.g. "absert". */
   ocr: string;
-  /** The word to show first. */
+  /** The scanner's pick: the word to show, also when `accepted` is false. */
   selected: string;
-  /** Best list matches, highest confidence first. */
+  /** The pick first, then the other closest list words. */
   candidates: Candidate[];
   /** False when the model wants the person to confirm this word. */
   accepted: boolean;
+  /** Whether `candidates` carry meaningful percentages for this word. */
+  scored: boolean;
   /** Object URL of the crop the model read (real scans only). */
   cropUrl?: string;
   /** Where the word is in the photo, clockwise from top left (real scans only). */
@@ -33,13 +35,13 @@ export type Point = [number, number];
 
 export interface ScannedWord {
   quad: [Point, Point, Point, Point];
-  ranked: { word: string; probability: number }[];
+  /** Likeliest first: by the scanner's decision score where it ranked them, else by the word model. */
+  candidates: { word: string; probability: number; hybridScore: number | null; editCost: number | null }[];
   accepted: boolean;
   selected: string | null;
   raw: string | null;
   stray: boolean;
   number: number | null;
-  cropPng: Uint8Array;
 }
 
 export interface PageScan {
