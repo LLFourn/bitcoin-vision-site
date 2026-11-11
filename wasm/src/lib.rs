@@ -40,56 +40,10 @@ fn corners<T: Into<f64> + Copy>(q: &[(T, T); 4]) -> [[f64; 2]; 4] {
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-struct Candidate {
+struct Alternative {
     word: &'static str,
-    /// The word model's probability for this word.
-    probability: f32,
-    /// The scanner's decision score, log10(probability) minus `editCost`;
-    /// larger is likelier. Absent only when no letters were read.
-    hybrid_score: Option<f64>,
-    /// How far the word is from the letters read, in weighted edits.
-    edit_cost: Option<f32>,
-}
-
-/// As many alternatives as a person can usefully choose between.
-const CANDIDATES: usize = 8;
-
-/// The likeliest words for one observation by the scanner's decision score.
-/// Letters that are already a list word are taken without ranking; those
-/// candidates are scored here by the same rule, so every word has the same
-/// kind of number beside it.
-fn candidates(observation: &bitcoin_vision_words::output::Observation) -> Vec<Candidate> {
-    use bitcoin_vision_words::hybrid::{CURRENT, distance, normalise};
-    use bitcoin_vision_words::output::Score;
-    let mut all: Vec<Candidate> = observation
-        .candidates
-        .iter()
-        .map(|c| Candidate {
-            word: c.word,
-            probability: c.probability,
-            hybrid_score: c.hybrid_score.as_ref().map(|s| match s {
-                Score::Finite(v) => *v,
-                Score::NegativeInfinity => f64::NEG_INFINITY,
-            }),
-            edit_cost: c.edit_cost,
-        })
-        .collect();
-    let read = observation.ocr_text.as_deref().map(normalise).unwrap_or_default();
-    if !read.is_empty() && all.iter().all(|c| c.hybrid_score.is_none()) {
-        for c in &mut all {
-            let edits = distance(&read, c.word, &CURRENT);
-            c.edit_cost = Some(edits);
-            c.hybrid_score = Some(f64::from(c.probability).log10() - f64::from(edits));
-        }
-    }
-    all.sort_by(|a, b| {
-        let score = |c: &Candidate| c.hybrid_score.unwrap_or(f64::NEG_INFINITY);
-        score(b)
-            .total_cmp(&score(a))
-            .then(b.probability.total_cmp(&a.probability))
-    });
-    all.truncate(CANDIDATES);
-    all
+    /// The chance this word is the one written.
+    confidence: f32,
 }
 
 #[derive(Serialize)]
@@ -97,12 +51,14 @@ fn candidates(observation: &bitcoin_vision_words::output::Observation) -> Vec<Ca
 struct WordOut {
     /// Corners in photo pixels, clockwise from top left.
     quad: [[f64; 2]; 4],
-    /// The likeliest list words, likeliest first.
-    candidates: Vec<Candidate>,
-    /// Whether the calibration accepts the pick; otherwise ask the person.
-    accepted: bool,
-    /// The word to show first.
+    /// The word the scanner picked.
     selected: Option<&'static str>,
+    /// The chance `selected` is right.
+    confidence: f32,
+    /// Whether the person should confirm `selected`.
+    check: bool,
+    /// Other words to offer, likeliest first, never `selected`.
+    alternatives: Vec<Alternative>,
     /// The text recogniser's literal read of the crop.
     raw: Option<String>,
     /// Not a word: left out of every reading order.
@@ -174,9 +130,6 @@ impl WordScanner {
             .map_err(err)?;
         *self.photo.borrow_mut() = Some(photo);
         let page = result.review();
-        // The review lists candidates by the word model alone; the document
-        // carries the score the scanner decides by.
-        let document = result.document();
         let out = PageOut {
             layout: match page.found {
                 bitcoin_vision_words::Found::Sheet => "sheet",
@@ -187,12 +140,16 @@ impl WordScanner {
             words: page
                 .words
                 .iter()
-                .zip(&document.observations)
-                .map(|(w, observation)| WordOut {
+                .map(|w| WordOut {
                     quad: corners(&w.quad.0),
-                    candidates: candidates(observation),
-                    accepted: w.accepted,
                     selected: w.selected,
+                    confidence: w.confidence,
+                    check: w.check,
+                    alternatives: w
+                        .alternatives
+                        .iter()
+                        .map(|&(word, confidence)| Alternative { word, confidence })
+                        .collect(),
                     raw: w.raw.clone(),
                     stray: w.stray,
                     number: w.number,

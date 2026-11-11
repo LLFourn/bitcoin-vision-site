@@ -126,15 +126,13 @@ export async function pageToWords(page: PageScan): Promise<WordRead[]> {
   const kept = order.map((i) => page.words[i]).filter((w) => w && !w.stray);
   const crops = await Promise.all(kept.map((w) => cropWord(w.quad)));
   return kept.map((w, i) => {
-      const selected = w.selected ?? w.candidates[0]?.word ?? '';
-      // The bridge lists candidates by the scanner's decision score; the pick leads.
-      const words = w.candidates.map((c) => c.word);
-      const candidates = [selected, ...words.filter((word) => word !== selected)].filter(Boolean);
+      const selected = w.selected ?? '';
+      const candidates = [...(selected ? [{ word: selected, confidence: w.confidence }] : []), ...w.alternatives];
       return {
         ocr: w.raw ?? '',
         selected,
         candidates,
-        accepted: w.accepted,
+        accepted: !w.check,
         quad: w.quad,
         cropUrl: URL.createObjectURL(new Blob([crops[i] as BlobPart], { type: 'image/png' })),
       };

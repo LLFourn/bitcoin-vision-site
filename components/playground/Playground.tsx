@@ -69,10 +69,13 @@ function Viewer({ s, a }: P) {
 
 /* ---------------------------------------------------------------- output */
 
+/** A chance as a whole percent, never rounded up to a certainty it isn't. */
+const percent = (p: number) => (p >= 0.995 && p < 1 ? 99 : Math.round(100 * p));
+
 const Conf = ({ pct, warn }: { pct: number | null; warn?: boolean }) => (
   <span role="cell" className="c-conf">
     <span className="track"><span className={warn ? 'is-warn' : undefined} style={{ width: `${pct ?? 0}%` }} /></span>
-    <span className="pct">{pct === null ? 'Unsure' : `${pct}%`}</span>
+    <span className="pct">{pct === null ? '—' : `${pct}%`}</span>
   </span>
 );
 
@@ -89,6 +92,7 @@ function WordTable({ s, a }: P) {
         <span role="columnheader">#</span>
         <span role="columnheader"><Short long="Handwriting" short="Written" /></span>
         <span role="columnheader">Read as</span>
+        <span role="columnheader" className="h-conf">Chance it’s right</span>
         <span role="columnheader" style={{ textAlign: 'right' }}>Status</span>
       </div>
       {s.words.map((w, i) => {
@@ -96,6 +100,7 @@ function WordTable({ s, a }: P) {
         const flagged = isFlagged(s, i);
         const open = s.open === i;
         const shown = pick || w.selected;
+        const chance = w.candidates.find((c) => c.word === shown)?.confidence;
         return (
           <div role="row" key={i} className={`wt-item${flagged ? ' is-flag' : ''}`}>
             <button
@@ -111,6 +116,7 @@ function WordTable({ s, a }: P) {
                 {w.cropUrl ? <img src={w.cropUrl} alt={`Handwriting read as “${w.ocr}”`} /> : w.ocr}
               </span>
               <span role="cell" className="c-word">{mask(shown)}</span>
+              <Conf pct={chance === undefined ? null : percent(chance)} warn={flagged} />
               <span role="cell" className="c-status">
                 {flagged
                   ? <span className="chip chip--warn">Check</span>
@@ -125,7 +131,7 @@ function WordTable({ s, a }: P) {
                 {w.cropUrl && <img className="crop-big" src={w.cropUrl} alt={`The crop the model read as “${w.ocr}”`} />}
                 <p>{why(w)}</p>
                 <div className="opts">
-                  {w.candidates.map((word) => (
+                  {w.candidates.map(({ word, confidence }) => (
                     <button
                       key={word}
                       type="button"
@@ -133,7 +139,7 @@ function WordTable({ s, a }: P) {
                       aria-pressed={pick === word}
                       onClick={() => a.pickWord(i, word)}
                     >
-                      <b>{mask(word)}</b>
+                      <b>{mask(word)}</b><small>{percent(confidence)}%</small>
                     </button>
                   ))}
                 </div>

@@ -10,9 +10,10 @@ export interface WordRead {
   ocr: string;
   /** The scanner's pick: the word to show, also when `accepted` is false. */
   selected: string;
-  /** The pick first, then the other list words, likeliest first. */
-  candidates: string[];
-  /** False when the model wants the person to confirm this word. */
+  /** The pick first, then the other list words, likeliest first, each with
+   * the scanner's chance (0–1) that it is the word written. */
+  candidates: { word: string; confidence: number }[];
+  /** False when the scanner asks the person to confirm this word. */
   accepted: boolean;
   /** Object URL of the crop the model read (real scans only). */
   cropUrl?: string;
@@ -26,10 +27,13 @@ export type Point = [number, number];
 
 export interface ScannedWord {
   quad: [Point, Point, Point, Point];
-  /** Likeliest first: by the scanner's decision score where it ranked them, else by the word model. */
-  candidates: { word: string; probability: number; hybridScore: number | null; editCost: number | null }[];
-  accepted: boolean;
   selected: string | null;
+  /** The chance `selected` is right. */
+  confidence: number;
+  /** The scanner asks the person to confirm `selected`. */
+  check: boolean;
+  /** Other words to offer, likeliest first, never `selected`. */
+  alternatives: { word: string; confidence: number }[];
   raw: string | null;
   stray: boolean;
   number: number | null;

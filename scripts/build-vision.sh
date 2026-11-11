@@ -8,7 +8,7 @@
 set -euo pipefail
 
 UPSTREAM_URL="https://github.com/penlock-io/bitcoin-vision.git"
-UPSTREAM_REV="ad726be285b57ca9fadc3529c3459d312a7db7aa"
+UPSTREAM_REV="219cc1381f42d8fde5703fdc3f24993ea0bd47a2"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 UP="$ROOT/wasm/upstream"
