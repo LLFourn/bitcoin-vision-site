@@ -357,7 +357,8 @@ function Output({ s, a }: P) {
     return (
       <div className="out-empty">
         <strong>Nothing read yet.</strong>
-        <p>Press Run sample to read this practice {bip ? 'page' : 'share'} with the real models, in this tab.</p>
+        <p>Read this practice {bip ? 'page' : 'share'} with the real models, in this tab.</p>
+        <button type="button" className="run out-empty-run" onClick={a.run}>Run sample ▸</button>
         <p>Or use your own practice photo.</p>
       </div>
     );
@@ -429,7 +430,7 @@ export default function Playground() {
               return <li key={n} className={`pill${failed ? ' is-bad' : done ? ' is-done' : running ? ' is-now' : ''}`}>{(failed ? '✗ ' : done ? '✓ ' : '') + n}</li>;
             })}
           </ol>
-          <button type="button" className="run" onClick={a.run} disabled={running}>{runLabel}</button>
+          {s.status !== 'idle' && <button type="button" className="run" onClick={a.run} disabled={running}>{runLabel}</button>}
         </div>
 
         <div className="pg-body">
