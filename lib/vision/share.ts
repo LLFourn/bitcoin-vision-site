@@ -77,7 +77,8 @@ export async function shareSample(photo: Blob, labels: SampleLabels): Promise<st
             picked: labels.picks[i] ?? null,
             /** Best label: the person's choice, else the model's word they left as it was. */
             label: labels.picks[i] || w.selected,
-            candidates: w.candidates.map((c) => [c.word, c.confidence / 100]),
+            /** Likeliest first, by the scanner's decision score. */
+            candidates: w.candidates,
             quad: scaleQuad(w.quad, k),
           })),
         }

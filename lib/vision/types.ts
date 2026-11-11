@@ -4,25 +4,16 @@
  * The raw scanner output types mirror wasm/src/lib.rs (serialised with camelCase).
  */
 
-export interface Candidate {
-  /** A word from the official 2048-word BIP-39 list. */
-  word: string;
-  /** 0–100 */
-  confidence: number;
-}
-
 /** One word as the demo shows it, from the sample page or from the real model. */
 export interface WordRead {
   /** Exactly what was read off the paper, e.g. "absert". */
   ocr: string;
   /** The scanner's pick: the word to show, also when `accepted` is false. */
   selected: string;
-  /** The pick first, then the other closest list words. */
-  candidates: Candidate[];
+  /** The pick first, then the other list words, likeliest first. */
+  candidates: string[];
   /** False when the model wants the person to confirm this word. */
   accepted: boolean;
-  /** Whether `candidates` carry meaningful percentages for this word. */
-  scored: boolean;
   /** Object URL of the crop the model read (real scans only). */
   cropUrl?: string;
   /** Where the word is in the photo, clockwise from top left (real scans only). */

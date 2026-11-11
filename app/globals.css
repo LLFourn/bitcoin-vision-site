@@ -220,7 +220,7 @@ img { max-width: 100%; }
 @keyframes indeterminate { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
 
 /* results table */
-.wt { --cols: 32px 1.1fr 1fr 1.3fr 96px; --gap: 12px; --padX: 10px; }
+.wt { --cols: 32px 1.1fr 1fr 96px; --gap: 12px; --padX: 10px; }
 .wt.is-pen { --cols: 32px 1fr 1.3fr 96px; }
 .wt-head, .wt-btn { display: grid; grid-template-columns: var(--cols); gap: var(--gap); align-items: center; padding: 0 var(--padX); }
 .wt-head { padding-top: 8px; padding-bottom: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--line); }

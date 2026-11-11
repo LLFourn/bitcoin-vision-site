@@ -45,8 +45,7 @@ struct Candidate {
     /// The word model's probability for this word.
     probability: f32,
     /// The scanner's decision score, log10(probability) minus `editCost`;
-    /// larger is likelier. Absent when the pick needed no ranking, because
-    /// the letters read were already a list word.
+    /// larger is likelier. Absent only when no letters were read.
     hybrid_score: Option<f64>,
     /// How far the word is from the letters read, in weighted edits.
     edit_cost: Option<f32>,
@@ -55,9 +54,12 @@ struct Candidate {
 /// As many alternatives as a person can usefully choose between.
 const CANDIDATES: usize = 8;
 
-/// The likeliest words for one observation, by the scanner's decision score
-/// where it ranked them and by the word model alone where it did not.
+/// The likeliest words for one observation by the scanner's decision score.
+/// Letters that are already a list word are taken without ranking; those
+/// candidates are scored here by the same rule, so every word has the same
+/// kind of number beside it.
 fn candidates(observation: &bitcoin_vision_words::output::Observation) -> Vec<Candidate> {
+    use bitcoin_vision_words::hybrid::{CURRENT, distance, normalise};
     use bitcoin_vision_words::output::Score;
     let mut all: Vec<Candidate> = observation
         .candidates
@@ -72,6 +74,14 @@ fn candidates(observation: &bitcoin_vision_words::output::Observation) -> Vec<Ca
             edit_cost: c.edit_cost,
         })
         .collect();
+    let read = observation.ocr_text.as_deref().map(normalise).unwrap_or_default();
+    if !read.is_empty() && all.iter().all(|c| c.hybrid_score.is_none()) {
+        for c in &mut all {
+            let edits = distance(&read, c.word, &CURRENT);
+            c.edit_cost = Some(edits);
+            c.hybrid_score = Some(f64::from(c.probability).log10() - f64::from(edits));
+        }
+    }
     all.sort_by(|a, b| {
         let score = |c: &Candidate| c.hybrid_score.unwrap_or(f64::NEG_INFINITY);
         score(b)

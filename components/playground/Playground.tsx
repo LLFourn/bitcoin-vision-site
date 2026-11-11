@@ -80,8 +80,8 @@ function WordTable({ s, a }: P) {
   const mask = (t: string) => (s.mask ? '•'.repeat(Math.min(8, t.length)) : t);
 
   const why = (w: WordRead) => (w.accepted
-    ? 'The closest of all 2048 seed words. Pick another if it misread you:'
-    : `It read “${w.ocr || '?'}” and picked “${mask(w.selected)}”, but isn’t sure. Confirm it or pick what you wrote:`);
+    ? 'The likeliest of all 2048 seed words, likeliest first. Pick another if it misread you:'
+    : `It read “${w.ocr || '?'}” and picked “${mask(w.selected)}”, but isn’t sure. Confirm it or pick what you wrote, likeliest first:`);
 
   return (
     <div role="table" aria-label="Words read" className="wt">
@@ -89,7 +89,6 @@ function WordTable({ s, a }: P) {
         <span role="columnheader">#</span>
         <span role="columnheader"><Short long="Handwriting" short="Written" /></span>
         <span role="columnheader">Read as</span>
-        <span role="columnheader" className="h-conf">Confidence</span>
         <span role="columnheader" style={{ textAlign: 'right' }}>Status</span>
       </div>
       {s.words.map((w, i) => {
@@ -97,9 +96,6 @@ function WordTable({ s, a }: P) {
         const flagged = isFlagged(s, i);
         const open = s.open === i;
         const shown = pick || w.selected;
-        // An unsure exact read was never ranked, so no percentage speaks for it.
-        const scored = w.scored;
-        const pct = scored ? w.candidates.find((c) => c.word === shown)?.confidence ?? w.candidates[0]?.confidence ?? 0 : null;
         return (
           <div role="row" key={i} className={`wt-item${flagged ? ' is-flag' : ''}`}>
             <button
@@ -115,7 +111,6 @@ function WordTable({ s, a }: P) {
                 {w.cropUrl ? <img src={w.cropUrl} alt={`Handwriting read as “${w.ocr}”`} /> : w.ocr}
               </span>
               <span role="cell" className="c-word">{mask(shown)}</span>
-              <Conf pct={pct} warn={flagged} />
               <span role="cell" className="c-status">
                 {flagged
                   ? <span className="chip chip--warn">Check</span>
@@ -130,15 +125,15 @@ function WordTable({ s, a }: P) {
                 {w.cropUrl && <img className="crop-big" src={w.cropUrl} alt={`The crop the model read as “${w.ocr}”`} />}
                 <p>{why(w)}</p>
                 <div className="opts">
-                  {w.candidates.map((c) => (
+                  {w.candidates.map((word) => (
                     <button
-                      key={c.word}
+                      key={word}
                       type="button"
                       className="opt"
-                      aria-pressed={pick === c.word}
-                      onClick={() => a.pickWord(i, c.word)}
+                      aria-pressed={pick === word}
+                      onClick={() => a.pickWord(i, word)}
                     >
-                      <b>{mask(c.word)}</b>{scored && <small>{c.confidence}%</small>}
+                      <b>{mask(word)}</b>
                     </button>
                   ))}
                 </div>

@@ -127,24 +127,14 @@ export async function pageToWords(page: PageScan): Promise<WordRead[]> {
   const crops = await Promise.all(kept.map((w) => cropWord(w.quad)));
   return kept.map((w, i) => {
       const selected = w.selected ?? w.candidates[0]?.word ?? '';
-      // The decision score is log10(probability) - editCost, so 10^score is each
-      // word's weight and its share of the listed weights reads as a percentage.
-      const scored = w.candidates.some((c) => Number.isFinite(c.hybridScore));
-      const weight = (c: (typeof w.candidates)[number]) => (scored ? 10 ** (c.hybridScore ?? -Infinity) : c.probability);
-      const total = w.candidates.reduce((sum, c) => sum + weight(c), 0) || 1;
-      const listed = w.candidates.map((c) => ({ word: c.word, confidence: Math.round((100 * weight(c)) / total) }));
-      // The pick leads even where it was chosen without ranking, as an exact read is.
-      const candidates = [
-        ...listed.filter((c) => c.word === selected),
-        ...(selected && !listed.some((c) => c.word === selected) ? [{ word: selected, confidence: 0 }] : []),
-        ...listed.filter((c) => c.word !== selected),
-      ];
+      // The bridge lists candidates by the scanner's decision score; the pick leads.
+      const words = w.candidates.map((c) => c.word);
+      const candidates = [selected, ...words.filter((word) => word !== selected)].filter(Boolean);
       return {
         ocr: w.raw ?? '',
         selected,
         candidates,
         accepted: w.accepted,
-        scored: w.accepted || scored,
         quad: w.quad,
         cropUrl: URL.createObjectURL(new Blob([crops[i] as BlobPart], { type: 'image/png' })),
       };

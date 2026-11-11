@@ -15,7 +15,9 @@ crate-type = ["cdylib"]
 [dependencies]
 # ./upstream is penlock-io/bitcoin-vision at the commit pinned in
 # scripts/build-vision.sh, with ./patches applied. That script creates it.
-bitcoin-vision-words = { path = "upstream/words", default-features = false, features = ["onnx"] }
+# `research` opens the scanner's own edit distance, so a word the scanner
+# took without ranking is scored by the same rule as the rest.
+bitcoin-vision-words = { path = "upstream/words", default-features = false, features = ["onnx", "research"] }
 penlock-scan = { path = "upstream/penlock-scan", default-features = false, features = ["onnx"] }
 penlock = { path = "upstream/penlock" }
 
